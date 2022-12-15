@@ -1,6 +1,6 @@
 # CS782-final-project
 
-# El gamal is use dis log and baby giant step for evasdrop, for encryption I use g**a % prime to generated C1 which a is only known by Alice, and c1**l % prime to generate C2 which l is screct key hold by Alice. And for decryption, Bob use C1 as B1 and generated his B2 ** k % prime to generate B2 which k is only known by Bob. Then Bob recieve cipher text which is msg * C2 ** k % prime, then he compute the inverse of C2 ** k. And decrypt the message using (inverse of C2 ** k) * ciphertext % prime.
+# El gamal is use dis log and baby giant step for evasdrop, for encryption I use g^a % prime to generated C1 which a is only known by Alice, and c1^l % prime to generate C2 which l is screct key hold by Alice. And for decryption, Bob use C1 as B1 and generated his B2 ^ k % prime to generate B2 which k is only known by Bob. Then Bob recieve cipher text which is msg * C2 ^ k % prime, then he compute the inverse of C2 ^ k. And decrypt the message using (inverse of C2 ^ k) * ciphertext % prime.
 
 # Modify the in put range to generate new prime in this line
 
