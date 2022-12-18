@@ -1,42 +1,4 @@
-import random
-import math
-
-
-# method check if the number is prime
-def checkprime(num: int):
-	if num == 2:
-		return True
-	if num % 2 == 0:
-		return False
-
-	for i in range(3, int(num ** 0.5) + 1, 2):
-		if (num % i) == 0:
-			return False
-	return True
-
-
-# Mod inverse
-def mod_inverse(input, prime):
-	for i in range(1, prime):
-		if ((input % prime) * (i % prime)) % prime == 1:
-			return i
-	return -1
-
-
-# collect prime factor
-def prime_factors(n):
-	li = []
-	while n % 2 == 0:
-		li.append(2)
-		n = n / 2
-
-	for i in range(3, int(math.sqrt(n)) + 1, 2):
-		while n % i == 0:
-			li.append(i)
-			n = n / i
-	if n > 2:
-		li.append(int(n))
-	return li
+from algorithm import *
 
 
 if __name__ == '__main__':
