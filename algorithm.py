@@ -95,4 +95,82 @@ def dis_log(base, num, p):
             if bj[k] == num * (check ** i) % p:
                 return i*m + k
 
+def Euclidean(x1, y1, x2, y2):
+    return math.sqrt(abs(x1**2 - x2**2) - abs(y1**2 - y2**2))
+
+
+def binaryToDecimal(binary):
+    dec = 0
+    i = 0
+    while (binary != 0):
+        dec = binary % 10
+        dec = dec + dec * pow(2, i)
+        binary = binary // 10
+        i += 1
+    return dec
+
+
+def random_Naor_Reingold(n ,x):
+    p = random.randrange(2 ** (n - 1) + 1, 2 ** n - 1)
+    q = random.randrange(2**(n-1)+1, 2**n-1)
+    N = q * p
+    li = []
+    for i in range(1, 2*n):
+        while len(li) < 2*n:
+            li.append(random.randrange(1, N))
+
+    g = primitive_root(N)**2 % N
+    bin_x = str(bin(x)[2:].zfill(n))
+    # print(li)
+    # print(bin_x)
+    # print(bin(43)[2:].zfill(n))
+    # li2 = [129, 978, 1350, 71, 3,1028, 514, 526, 411, 495, 216, 810]
+    sum = 0
+    # print(len(bin_x))
+    for i in range(0, len(bin_x)):
+        if bin_x[i] == '1':
+            sum += li[2*i+1]
+        elif bin_x[i] == '0':
+            sum += li[2*i]
+    # print(sum)
+    c = g ** sum % N
+    # print(c)
+    bin_c = bin(c)[2:].zfill(2 * n)
+    r = random.randrange(0, 2**n - 1)
+    bin_r = bin(r)[2:].zfill(2 * n)
+    dec = binaryToDecimal(int(bin_c)) & binaryToDecimal(int(bin_r))
+    return dec
+
+
+
+
+def fastexp(base, exp, p):
+    y = 1
+    while exp > 0:
+        x = base % p
+        if exp % 2 != 0:
+            y = x * y % p
+            exp = exp - 1
+            print("%d  %d  %d" % (x, exp, y))
+        elif exp % 2 == 0:
+            x = x**2 % p
+            exp = exp / 2
+            print("%d  %d  %d" % (x, exp, y))
+
+    return y
+
+
+def blum(n):
+    p = random.randrange(2 ** (n - 1) + 1, 2 ** n - 1)
+    q = random.randrange(2 ** (n - 1) + 1, 2 ** n - 1)
+    N = p * q
+    li = []
+    for i in range(1, N-1):
+        seed = primitive_root(N)
+        s = seed ** 2 % N
+        b = s % 2
+        li.append(b)
+    s = [str(k) for k in li]
+    str_bin = int(''.join(s))
+    return binaryToDecimal(str_bin)
 
