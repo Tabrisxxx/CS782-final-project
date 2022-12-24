@@ -4,80 +4,6 @@ import math
 from collections import OrderedDict
 
 
-# method check if the number is prime
-def checkprime(num: int):
-    if num == 2:
-        return True
-    if num % 2 == 0:
-        return False
-
-    for i in range(3, int(num**0.5) + 1, 2):
-        if (num % i) == 0:
-            return False
-    return True
-
-
-# method check if g is primitive root of p
-def is_root(g, prime):
-    for i in range(1, prime - 1):
-        # If g^i mod p is equal to 1, g is not a primitive root
-
-        if (g**i) % prime == 1:
-            return False
-    return True
-
-
-# method find prime root
-def primitive_root(prime):
-    g = random.randrange(2, prime)
-
-    # If it is, return g
-    if is_root(g, prime):
-        return g
-    while not is_root(g, prime):
-        g = random.randrange(2, prime)
-    return g
-
-
-# def generate private key
-def gen_c1(g, a, prime):
-    return (g**a) % prime
-
-
-# Encryption
-def elgamal_enc(c1, k, prime):
-    return (c1**k) % prime
-
-
-# Mod inverse
-def mod_inverse(input, prime):
-    for i in range(1, prime):
-        if ((input % prime) * (i % prime)) % prime == 1:
-            return i
-    return -1
-
-
-# decryption
-def decrypt(dec, enc_msg):
-    return dec * enc_msg
-
-
-def prime_factors(n):
-    li = []
-    while n % 2 == 0:
-        li.append(2)
-        n = n / 2
-
-    for i in range(3, int(math.sqrt(n)) + 1, 2):
-        while n % i == 0:
-            li.append(i)
-            n = n / i
-    if n > 2:
-        li.append(int(n))
-
-    return li
-
-
 def dis_log(base, num, p):
     order = p - 1
     bj = {}
@@ -96,11 +22,10 @@ def dis_log(base, num, p):
                 return i*m + k
 
 
-
 def binaryToDecimal(binary):
     dec = 0
     i = 0
-    while (binary != 0):
+    while binary != 0:
         dec = binary % 10
         dec = dec + dec * pow(2, i)
         binary = binary // 10
@@ -109,12 +34,10 @@ def binaryToDecimal(binary):
 
 
 def random_root(p):
-    li = []
-    for i in range(2, p):
-        if math.gcd(i, p) == 1:
-            li.append(i)
+    dict = {i for i in range(1, p) if Expanded_Euclidean(i, p)[0] == 1}
+    li = [[g for g in range(1, p) if dict == {pow(g, exp, p) for exp in range(1, p)}]]
     print(li)
-    return random.choice(li)
+    return random.choice(li[0])
 
 
 def random_Naor_Reingold(n, x):
@@ -216,7 +139,7 @@ def Expanded_Euclidean(a, b):
     if a == 0:
         return b, 0, 1
     gcd, y, x = Expanded_Euclidean(b % a, a)
-    
+
     return gcd, x - (b // a) * y, y
 
 
@@ -226,3 +149,79 @@ def inverse_Euclidean(input, prime):
         return "No inverse exist"
     else:
         return x % prime
+
+
+# method check if the number is prime
+def checkprime(num: int):
+    if num == 2:
+        return True
+    if num % 2 == 0:
+        return False
+
+    for i in range(3, int(num**0.5) + 1, 2):
+        if (num % i) == 0:
+            return False
+    return True
+
+
+# method check if g is primitive root of p
+def is_root(g, prime):
+    for i in range(1, prime - 1):
+        # If g^i mod p is equal to 1, g is not a primitive root
+
+        if (g**i) % prime == 1:
+            return False
+    return True
+
+
+# method find prime root
+def primitive_root(prime):
+    g = random.randrange(2, prime)
+
+    # If it is, return g
+    if is_root(g, prime):
+        return g
+    while not is_root(g, prime):
+        g = random.randrange(2, prime)
+    return g
+
+
+# def generate private key
+def gen_c1(g, a, prime):
+    return (g**a) % prime
+
+
+# Encryption
+def elgamal_enc(c1, k, prime):
+    return (c1**k) % prime
+
+
+# Mod inverse
+def mod_inverse(input, prime):
+    for i in range(1, prime):
+        if ((input % prime) * (i % prime)) % prime == 1:
+            return i
+    return -1
+
+
+# decryption
+def decrypt(dec, enc_msg):
+    return dec * enc_msg
+
+
+def prime_factors(n):
+    li = []
+    while n % 2 == 0:
+        li.append(2)
+        n = n / 2
+
+    for i in range(3, int(math.sqrt(n)) + 1, 2):
+        while n % i == 0:
+            li.append(i)
+            n = n / i
+    if n > 2:
+        li.append(int(n))
+
+    return li
+
+
