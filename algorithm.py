@@ -81,7 +81,7 @@ def prime_factors(n):
 def dis_log(base, num, p):
     order = p - 1
     bj = {}
-    #generator = primitive_root(p)
+    # generator = primitive_root(p)
     m = math.ceil(math.sqrt(order))
     for j in range(0, m):
         bj[j] = base**j % p
@@ -95,8 +95,6 @@ def dis_log(base, num, p):
             if bj[k] == num * (check ** i) % p:
                 return i*m + k
 
-def Euclidean(x1, y1, x2, y2):
-    return math.sqrt(abs(x1**2 - x2**2) - abs(y1**2 - y2**2))
 
 
 def binaryToDecimal(binary):
@@ -110,7 +108,16 @@ def binaryToDecimal(binary):
     return dec
 
 
-def random_Naor_Reingold(n ,x):
+def random_root(p):
+    li = []
+    for i in range(2, p):
+        if math.gcd(i, p) == 1:
+            li.append(i)
+    print(li)
+    return random.choice(li)
+
+
+def random_Naor_Reingold(n, x):
     p = random.randrange(2 ** (n - 1) + 1, 2 ** n - 1)
     q = random.randrange(2**(n-1)+1, 2**n-1)
     N = q * p
@@ -119,7 +126,7 @@ def random_Naor_Reingold(n ,x):
         while len(li) < 2*n:
             li.append(random.randrange(1, N))
 
-    g = primitive_root(N)**2 % N
+    g = random_root(N)**2 % N
     bin_x = str(bin(x)[2:].zfill(n))
     # print(li)
     # print(bin_x)
@@ -142,9 +149,30 @@ def random_Naor_Reingold(n ,x):
     return dec
 
 
+# length is length of bits
+def blum(length):
+    p = random.randrange(2, 100000)
+    while not miller_prime(p) and not p % 4 == 3:
+        p = random.randrange(2, 100000)
+    #print(p)
+    q = random.randrange(2, 100000)
+    while not miller_prime(q) and not q % 4 == 3:
+        q = random.randrange(2, 100000)
+    #print(q)
+    N = p * q
+    str_bin = ""
+    seed = random.randint(2, N-1)
+    while length:
+        s = pow(seed, 2, N)
+        #print(s)
+        b = s % 2
+        seed = s
+        str_bin += str(b)
+        length -= 1
+    return str_bin
 
 
-def fastexp(base, exp, p):
+def fast_exp(base, exp, p):
     y = 1
     while exp > 0:
         x = base % p
@@ -160,17 +188,41 @@ def fastexp(base, exp, p):
     return y
 
 
-def blum(n):
-    p = random.randrange(2 ** (n - 1) + 1, 2 ** n - 1)
-    q = random.randrange(2 ** (n - 1) + 1, 2 ** n - 1)
-    N = p * q
-    li = []
-    for i in range(1, N-1):
-        seed = primitive_root(N)
-        s = seed ** 2 % N
-        b = s % 2
-        li.append(b)
-    s = [str(k) for k in li]
-    str_bin = int(''.join(s))
-    return binaryToDecimal(str_bin)
+def miller_prime(n):
+    if n % 2 == 0:
+        return False
+    exp = 0
+    rm = n - 1
+    while rm % 2 == 0:
+        rm >>= 1
+        exp += 1
+    assert(2 ** exp * rm == n - 1)
+    for k in range(0, exp):
+        b = random.randrange(2, n - 2)
+        # if b ** rm % n == 1 % n:
+        if pow(b, rm, n) == 1 % n:
+            return True
+        if pow(b, rm, n) == -1 % n:
+            return True
+        else:
+            for r in range(1, exp):
+                exp2 = 2 ** r
+                if pow(b, (rm * exp2), n) == -1 % n:
+                    return True
+    return False
 
+
+def Expanded_Euclidean(a, b):
+    if a == 0:
+        return b, 0, 1
+    gcd, y, x = Expanded_Euclidean(b % a, a)
+    
+    return gcd, x - (b // a) * y, y
+
+
+def inverse_Euclidean(input, prime):
+    gcd, x, y = Expanded_Euclidean(input, prime)
+    if gcd != 1:
+        return "No inverse exist"
+    else:
+        return x % prime
